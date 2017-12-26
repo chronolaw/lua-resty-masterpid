@@ -19,7 +19,7 @@ ffi_cdef[[
 
 local function get_masterpid()
     if ffi.os ~= "Linux" then
-        return nil, "only work in linux"
+        return nil, "only works in linux"
     end
 
     -- 0 = single process
