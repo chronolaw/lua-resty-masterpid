@@ -18,22 +18,26 @@ ffi_cdef[[
     extern ngx_pid_t  ngx_parent;
 ]]
 
+-- 0 = single process
+local function is_single_process()
+    return ffi_C.ngx_process == 0
+end
 
 local function get_masterpid()
     if ffi.os ~= "Linux" then
         return nil, "only works in linux"
     end
 
-    -- nginx 1.13.8 has ngx_parent
-    if ngx.config and ngx.config.nginx_version >= 1013008 then
-        return ffi_C.ngx_parent
+    if is_single_process() then
+        return ngx_worker_pid()
+    else
+        -- nginx 1.13.8 has ngx_parent
+        if ngx.config and ngx.config.nginx_version >= 1013008 then
+            return ffi_C.ngx_parent
+        else
+            return ffi_C.getppid()
+        end
     end
-
-    -- 0 = single process
-    local pid = (ffi_C.ngx_process == 0) and
-                    ngx_worker_pid() or ffi_C.getppid()
-
-    return pid
 end
 
 return get_masterpid
