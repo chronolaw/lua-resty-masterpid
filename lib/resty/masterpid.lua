@@ -13,6 +13,7 @@ ffi_cdef[[
 
 ffi_cdef[[
     typedef uintptr_t ngx_uint_t;
+    typedef pid_t     ngx_pid_t;
 
     extern ngx_uint_t ngx_process;
     extern ngx_pid_t  ngx_parent;
